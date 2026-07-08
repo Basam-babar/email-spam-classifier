@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Spam Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .result.spam {
+            background: #fff5f5;
+            border: 2px solid #fc8181;
+        }
+
+        .result.ham {
+            background: #f0fff4;
+            border: 2px solid #68d391;
+        }
+
+        .result-label {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .spam .result-label {
+            color: #e53e3e;
+        }
+
+        .ham .result-label {
+            color: #38a169;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .confidence {
+            font-size: 1.1rem;
+            color: #555;
+            margin-top: 8px;
+        }
+
+        .confidence span {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .spam .progress-fill {
+            background: linear-gradient(90deg, #fc8181, #e53e3e);
+        }
+
+        .ham .progress-fill {
+            background: linear-gradient(90deg, #68d391, #38a169);
+        }
+
+        .tips {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f7f7f7;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .tips strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Email Spam Checker</h1>
+        <p class="subtitle">Paste your email below to check if it is spam or not</p>
+
+        <form method="POST">
+            <textarea 
+                name="email_text" 
+                placeholder="Paste your email content here..."
+                required
+            >{{ email_text }}</textarea>
+
+            <button type="submit">🔍 Check Email</button>
+        </form>
+
+        {% if result %}
+        <div class="result {{ 'spam' if result.label == 'SPAM' else 'ham' }}">
+
+            <div class="result-icon">
+                {{ '🚨' if result.label == 'SPAM' else '✅' }}
+            </div>
+
+            <div class="result-label">
+                {{ result.label }}
+            </div>
+
+            <div class="confidence">
+                Confidence: <span>{{ result.confidence }}%</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ result.confidence }}%"></div>
+            </div>
+
+        </div>
+        {% endif %}
+
+        <div class="tips">
+            <strong>💡 How it works:</strong>
+            This tool uses a Machine Learning model trained on thousands of emails.
+            It analyses the words in your email and predicts whether it is spam or not.
+        </div>
+    </div>
+</body>
+</html>
